@@ -71,4 +71,5 @@ jobs:
                 file: Dockerfile
                 push: true
                 platforms: linux/amd64
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/doctor-appointment-api:${{ secrets.DOCKERHUB_USERNAME }}/doctor-appointment-api:latest
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/doctor-appointment-api:latest
+
