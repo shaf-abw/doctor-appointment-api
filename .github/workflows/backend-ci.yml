@@ -54,7 +54,7 @@ jobs:
                       
             # Step 4: Build and test the application using Maven
             - name: Build with Maven
-              run: mvn clean install test -Dspring.datasource.url=jdbc:mysql://localhost:3306/testdb \
-                -Dspring.datasource.username=testuser \
-                -Dspring.datasource.password=testpassword
+              run: mvn clean install test -Dspring.datasource.url=jdbc:mysql://localhost:3306/doctor_appointment \
+                -Dspring.datasource.username=shafeeque \
+                -Dspring.datasource.password=Shaf@123
 
