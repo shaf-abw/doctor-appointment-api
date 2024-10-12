@@ -10,7 +10,7 @@ import org.hibernate.annotations.NaturalId;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "doctor")
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-@EqualsAndHashCode(callSuper = true, exclude = {"clinics"})
+@EqualsAndHashCode(callSuper = true)
 public class Doctor extends AbstractMappedEntity implements Serializable {
 
     @Serial
@@ -51,6 +51,7 @@ public class Doctor extends AbstractMappedEntity implements Serializable {
     @Column(name = "mobile", unique = true)
     private String mobile;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Clinic> clinics;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "doctor_id")
+    private Set<Clinic> clinics;
 }

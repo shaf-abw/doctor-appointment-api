@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,24 +35,24 @@ public class Appointment extends AbstractMappedEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "clinic_id", referencedColumnName = "id")
+    private Clinic clinic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "patient_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
-    @NotBlank(message = "Appointment Date must not be blank")
+    @NotNull(message = "Appointment Date must not be blank")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
-    @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
+    @JsonFormat(pattern = AppConstant.LOCAL_DATE_FORMAT, shape = JsonFormat.Shape.STRING)
+    @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_FORMAT)
     @Column(name = "appointment_date", nullable = false)
     private LocalDate appointmentDate;
 
     @NotBlank(message = "Appointment Time must not be blank")
-    @Column(name = "appointment_time", nullable = false, length = 60)
+    @Column(name = "appointment_time", nullable = false)
     private String appointmentTime;
 
     @Enumerated(EnumType.STRING)

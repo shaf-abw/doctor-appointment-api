@@ -1,5 +1,6 @@
 package com.abw.doctorAppointment.service.impl;
 
+import com.abw.doctorAppointment.exception.ResourceNotFoundException;
 import com.abw.doctorAppointment.model.dto.ClinicDTO;
 import com.abw.doctorAppointment.model.entity.Clinic;
 import com.abw.doctorAppointment.repository.ClinicRepository;
@@ -20,6 +21,7 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Autowired
     private ClinicRepository clinicRepository;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -37,7 +39,7 @@ public class ClinicServiceImpl implements ClinicService {
         log.info("ClinicServiceImpl : getClinicById");
         return clinicRepository.findById(id)
                 .map((element) -> modelMapper.map(element, ClinicDTO.class))
-                .orElseThrow(() -> new RuntimeException("Clinic not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Clinic not found"));
     }
 
     @Override
@@ -59,7 +61,7 @@ public class ClinicServiceImpl implements ClinicService {
                     clinic.setCity(updatedClinic.getCity());
                     clinic.setState(updatedClinic.getState());
                     return clinicRepository.save(clinic);
-                }).orElseThrow(() -> new RuntimeException("Clinic not found")), ClinicDTO.class);
+                }).orElseThrow(() -> new ResourceNotFoundException("Clinic not found")), ClinicDTO.class);
     }
 
     @Override

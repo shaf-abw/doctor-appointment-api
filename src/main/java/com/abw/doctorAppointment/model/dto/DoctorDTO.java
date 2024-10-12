@@ -23,5 +23,5 @@ public class DoctorDTO {
     @Pattern(regexp = "^\\+84[0-9]{9,10}$|^0[0-9]{9,10}$", message = "The mobile number is not in the correct format")
     private String mobile;
 
-    private List<ClinicDTO> clinicDTOList;
+    private List<ClinicDTO> clinics;
 }

@@ -1,5 +1,6 @@
 package com.abw.doctorAppointment.service.impl;
 
+import com.abw.doctorAppointment.exception.ResourceNotFoundException;
 import com.abw.doctorAppointment.model.dto.DoctorDTO;
 import com.abw.doctorAppointment.model.entity.Doctor;
 import com.abw.doctorAppointment.repository.DoctorRepository;
@@ -37,7 +38,7 @@ public class DoctorServiceImpl implements DoctorService {
         log.info("DoctorServiceImpl : getDoctorById");
         return doctorRepository.findById(id)
                 .map((element) -> modelMapper.map(element, DoctorDTO.class))
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
     }
 
     @Override
@@ -57,8 +58,9 @@ public class DoctorServiceImpl implements DoctorService {
                     doctor.setSpecialty(updatedDoctor.getSpecialty());
                     doctor.setEmail(updatedDoctor.getEmail());
                     doctor.setMobile(updatedDoctor.getMobile());
+//                    doctor.setClinics(updatedDoctor.getClinics());
                     return doctorRepository.save(doctor);
-                }).orElseThrow(() -> new RuntimeException("Doctor not found")), DoctorDTO.class);
+                }).orElseThrow(() -> new ResourceNotFoundException("Doctor not found")), DoctorDTO.class);
     }
 
     @Override

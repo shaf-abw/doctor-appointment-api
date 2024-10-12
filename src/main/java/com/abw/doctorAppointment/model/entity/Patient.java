@@ -1,10 +1,7 @@
 package com.abw.doctorAppointment.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,7 +36,7 @@ public class Patient extends AbstractMappedEntity implements Serializable {
     @Column(name = "gender", nullable = false)
     private String gender;
 
-    @NotBlank(message = "Age must not be blank")
+    @NotNull(message = "Age must not be blank")
     @Column(name = "age", nullable = false)
     private int age;
 
