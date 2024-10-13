@@ -13,8 +13,8 @@ ARG APP_VERSION=1.0.0
 WORKDIR /app
 COPY --from=build /build/target/docker-appointment-api-*.jar /app/
 
-EXPOSE 8088
+EXPOSE 8080
 
 ENV JAR_VERSION=${APP_VERSION}
 
-CMD java -jar book-network-${JAR_VERSION}.jar
+CMD java -jar docker-appointment-api-${JAR_VERSION}.jar
