@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.abw</groupId>
 	<artifactId>doctor-appointment</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>doctor-appointment</name>
 	<description>Doctor Appointment for Spring Boot</description>
 	<url/>
@@ -112,6 +112,11 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<repository>abwshaf/docker-appointment-api</repository>
+					<tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
