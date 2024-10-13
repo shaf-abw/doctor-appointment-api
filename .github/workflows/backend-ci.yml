@@ -61,14 +61,7 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-maven-
                       
-            # Step 4: Build and test the application using Maven
-            - name: Build and Test with Maven
-              run: mvn clean install test
-              env:
-                MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-                MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-            # Step 5: Build and Push
+            # Step 4: Build and Push
             - name: Build and Push
               run: mvn package dockerfile:push --file pom.xml
               env:
