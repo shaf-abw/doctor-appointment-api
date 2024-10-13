@@ -1,0 +1,43 @@
+name: BACKEND-CD
+
+# Trigger the workflow when push to main
+on:
+    workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
+  GKE_CLUSTER: gksdadev001
+  GKE_ZONE: us-central1-c
+
+# Define the Jobs
+jobs:
+    Deploy:
+
+        runs-on: ubuntu-latest
+
+        steps:
+
+            # Step 1: Check out the repository
+            - name: Check out the repository
+            - uses: actions/checkout@master
+
+            # Step 2: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
+            - name: Create Docker Hub Image Pull Secret in Kubernetes
+              run: |
+                kubectl create secret docker-registry regcred \
+                  --docker-username=${{ secrets.DOCKER_USERNAME }} \
+                  --docker-password=${{ secrets.DOCKER_PASSWORD }} \
+                  --docker-email=${{ secrets.DOCKER_EMAIL }} \
+                  --dry-run=client -o yaml | kubectl apply -f -
+
+            # Step 3: Deploy to GKE using kubectl
+            - name: Deploy to GKE
+              uses: ameydev/gke-kubectl-action@master
+              env:
+                PROJECT_ID: ${{ env.PROJECT_ID }}
+                APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
+                CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+                ZONE_NAME: ${{ env.GKE_ZONE }}
+              with:
+                args: apply -f k8s/
+            
