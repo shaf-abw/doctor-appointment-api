@@ -19,7 +19,7 @@ jobs:
 
             # Step 1: Check out the repository
             - name: Check out the repository
-            - uses: actions/checkout@master
+              uses: actions/checkout@master
 
             # Step 2: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
             - name: Create Docker Hub Image Pull Secret in Kubernetes
