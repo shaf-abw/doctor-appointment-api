@@ -68,40 +68,40 @@ jobs:
                   MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
                   MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-    Deploy:
-        needs: build
+    # Deploy:
+    #     needs: build
 
-        runs-on: ubuntu-latest
+    #     runs-on: ubuntu-latest
 
-        steps:
+    #     steps:
 
-            # Step 1: Check out the repository
-            - name: Check out the repository
-              uses: actions/checkout@master
+    #         # Step 1: Check out the repository
+    #         - name: Check out the repository
+    #           uses: actions/checkout@master
 
-            # Step 2: Set up GKE kubectl context
-            - name: Set up GKE kubectl context
-              run: |
-                echo "${{ secrets.GKE_SA_KEY }}" > "${HOME}/gke_key.json"
-                gcloud auth activate-service-account --key-file="${HOME}/gke_key.json"
-                gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
+    #         # Step 2: Set up GKE kubectl context
+    #         - name: Set up GKE kubectl context
+    #           run: |
+    #             echo "${{ secrets.GKE_SA_KEY }}" > "${HOME}/gke_key.json"
+    #             gcloud auth activate-service-account --key-file="${HOME}/gke_key.json"
+    #             gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
 
-            # Step 3: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
-            - name: Create Docker Hub Image Pull Secret in Kubernetes
-              run: |
-                kubectl create secret docker-registry regcred \
-                  --docker-username=${{ secrets.DOCKER_USERNAME }} \
-                  --docker-password=${{ secrets.DOCKER_PASSWORD }} \
-                  --docker-email=${{ secrets.DOCKER_EMAIL }} \
-                  --dry-run=client -o yaml | kubectl apply -f -
+    #         # Step 3: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
+    #         - name: Create Docker Hub Image Pull Secret in Kubernetes
+    #           run: |
+    #             kubectl create secret docker-registry regcred \
+    #               --docker-username=${{ secrets.DOCKER_USERNAME }} \
+    #               --docker-password=${{ secrets.DOCKER_PASSWORD }} \
+    #               --docker-email=${{ secrets.DOCKER_EMAIL }} \
+    #               --dry-run=client -o yaml | kubectl apply -f -
 
-            # Step 4: Deploy to GKE using kubectl
-            - name: Deploy to GKE
-              uses: ameydev/gke-kubectl-action@master
-              env:
-                PROJECT_ID: ${{ env.PROJECT_ID }}
-                APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
-                CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
-                ZONE_NAME: ${{ env.GKE_ZONE }}
-              with:
-                args: apply -f k8s/
+    #         # Step 4: Deploy to GKE using kubectl
+    #         - name: Deploy to GKE
+    #           uses: ameydev/gke-kubectl-action@master
+    #           env:
+    #             PROJECT_ID: ${{ env.PROJECT_ID }}
+    #             APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
+    #             CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+    #             ZONE_NAME: ${{ env.GKE_ZONE }}
+    #           with:
+    #             args: apply -f k8s/
