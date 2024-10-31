@@ -21,7 +21,25 @@ jobs:
             - name: Check out the repository
               uses: actions/checkout@master
 
-            # Step 2: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
+            # Step 2: Set up GKE kubectl context
+            - name: Set up GKE kubectl context
+              run: |
+                echo "${{ secrets.GKE_SA_KEY }}" | base64 --decode > "${HOME}/gke_key.json"
+                gcloud auth activate-service-account --key-file="${HOME}/gke_key.json"
+                gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
+
+            # Step 3: Install Google Cloud SDK and gke-gcloud-auth-plugin
+            - name: Install Google Cloud SDK and gke-gcloud-auth-plugin
+              run: |
+                echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+                sudo apt-get install apt-transport-https ca-certificates gnupg -y
+                curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+                sudo apt-get update
+                sudo apt-get install google-cloud-sdk -y
+                sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin -y
+                export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+            
+            # Step 4: Create Kubernetes Secret for Docker Hub (Image Pull Secret)
             - name: Create Docker Hub Image Pull Secret in Kubernetes
               run: |
                 kubectl create secret docker-registry regcred \
@@ -30,7 +48,7 @@ jobs:
                   --docker-email=${{ secrets.DOCKER_EMAIL }} \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-            # Step 3: Deploy to GKE using kubectl
+            # Step 5: Deploy to GKE using kubectl
             - name: Deploy to GKE
               uses: ameydev/gke-kubectl-action@master
               env:
