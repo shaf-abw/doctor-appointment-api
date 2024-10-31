@@ -1,5 +1,6 @@
 package com.abw.doctorAppointment.api;
 
+import com.abw.doctorAppointment.model.dto.request.Login;
 import com.abw.doctorAppointment.model.dto.request.Register;
 import com.abw.doctorAppointment.model.entity.User;
 import com.abw.doctorAppointment.service.UserService;
@@ -21,7 +22,13 @@ public class UserAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody Register register) {
-        log.info("UserController : register --> {}", register.toString());
+        log.info("UserController : register --> {}", register);
         return ResponseEntity.ok(userService.register(register));
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody Login login) {
+        log.info("UserController : login --> {}", login);
+        return ResponseEntity.ok(userService.login(login));
     }
 }

@@ -29,13 +29,13 @@ public class User {
 
     @NotBlank(message = "Username must not be blank")
     @Size(min = 3, max = 100, message = "Username must be between 3 and 100 characters")
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false, updatable = false)
     private String username;
 
     @JsonIgnore
     @NotNull(message = "Password must not be null")
     @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
