@@ -82,7 +82,7 @@ jobs:
             # Step 2: Set up GKE kubectl context
             - name: Set up GKE kubectl context
               run: |
-                echo "${{ secrets.GKE_SA_KEY }}" > "${HOME}/gke_key.json"
+                echo "${{ secrets.GKE_SA_KEY }}" | base64 --decode > "${HOME}/gke_key.json"
                 gcloud auth activate-service-account --key-file="${HOME}/gke_key.json"
                 gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
 
